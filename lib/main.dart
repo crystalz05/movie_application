@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:movie_application/core/usecases/usecase.dart';
+import 'package:movie_application/features/movies/domain/usecases/get_movies.dart';
 
-void main() {
+import 'injection_container.dart' as di;
+
+
+Future<void> main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await di.init();
+
+  final getMovies = di.sl<GetMovies>();
+  final result = await getMovies(MovieParams(search: "spiderman"));
+
+  result.fold(
+        (failure) => print("FAILURE: $failure"),
+        (movies) => print("SUCCESS: ${movies.length} movies found"),
+  );
+
+
   runApp(const MyApp());
 }
 
@@ -26,10 +45,10 @@ class MyHomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Movie Application"),
+      appBar: AppBar(title: Text("Movie Application", style: TextStyle(fontWeight: FontWeight.bold),),
       centerTitle: true),
       body: const Center(
-        child: Text("Hello World"),
+        child: Text("Hello World New"),
       ),
     );
   }
