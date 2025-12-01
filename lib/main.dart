@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_application/core/usecases/usecase.dart';
 import 'package:movie_application/features/movies/domain/usecases/get_movies.dart';
+import 'package:movie_application/features/movies/presentation/bloc/movie_bloc.dart';
+import 'package:movie_application/features/movies/presentation/pages/main_page.dart';
 
 import 'injection_container.dart' as di;
 
@@ -11,13 +14,13 @@ Future<void> main() async {
 
   await di.init();
 
-  final getMovies = di.sl<GetMovies>();
-  final result = await getMovies(MovieParams(search: "spiderman"));
-
-  result.fold(
-        (failure) => print("FAILURE: $failure"),
-        (movies) => print("SUCCESS: ${movies.length} movies found"),
-  );
+  // final getMovies = di.sl<GetMovies>();
+  // final result = await getMovies(MovieParams(search: "spiderman"));
+  //
+  // result.fold(
+  //       (failure) => print("FAILURE: $failure"),
+  //       (movies) => print("SUCCESS: ${movies.length} movies found"),
+  // );
 
 
   runApp(const MyApp());
@@ -34,21 +37,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget{
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Movie Application", style: TextStyle(fontWeight: FontWeight.bold),),
-      centerTitle: true),
-      body: const Center(
-        child: Text("Hello World New"),
+      home: BlocProvider(
+          create: (context) =>di.sl<MovieBloc>(),
+          child: const MainPage(),
       ),
     );
   }
